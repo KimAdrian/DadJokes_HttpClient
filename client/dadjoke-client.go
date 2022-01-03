@@ -1,6 +1,9 @@
 package client
 
 import (
+	"encoding/json"
+	"github.com/KimAdrian/DadJokes_HttpClient/model"
+	"io"
 	"log"
 	"net/http"
 )
@@ -20,6 +23,19 @@ func FetchJoke() (string, error) {
 		log.Fatal(err)
 	}
 
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(res.Body)
 
+	var jokeResponse model.DadJokeResponse
+
+	//Decode the data
+	if err := json.NewDecoder(res.Body).Decode(&jokeResponse); err != nil {
+		log.Fatal("An error occurred: ", err)
+	}
+
+	return jokeResponse.TextOutput(), err
 }
