@@ -17,6 +17,7 @@ func FetchJoke() (string, error) {
 	}
 
 	req.Header.Add("Accept", "application/json")
+	req.Header.Add("User-Agent", "https://github.com/KimAdrian/DadJokes_HttpClient")
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
